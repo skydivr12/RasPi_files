@@ -1,35 +1,19 @@
 import os
 import time
-from spidev import SpiDev
- 
-class MCP3008:
-    def __init__(self, bus = 0, device = 0):
-        self.bus, self.device = bus, device
-        self.spi = SpiDev()
-        self.open()
-        self.spi.max_speed_hz = 1000000 # 1MHz
- 
-    def open(self):
-        self.spi.open(self.bus, self.device)
-        self.spi.max_speed_hz = 1000000 # 1MHz
-    
-    def read(self, channel = 0):
-        adc = self.spi.xfer2([1, (8 + channel) << 4, 0])
-        data = ((adc[1] & 3) << 8) + adc[2]
-        return data
+import schedule
+from MCP3008 import MCP3008
 
-    def close(self):
-        self.spi.close()
- 
 # Define variables
 adc = MCP3008()
-min_light_value = 100
+min_light_value = 200
 max_light_value = 900
 min_backlight_value = 15
 max_backlight_value = 100
-delay_time = 3
+schedule_time = 1  # in seconds
+sleep_time = 0.1  # in seconds
 
-while True:
+# Define function to read light sensor value and set backlight value
+def set_backlight():
     # Read light sensor value
     light_value = adc.read(channel=0)
 
@@ -44,5 +28,10 @@ while True:
     # Set backlight value
     os.system("vcgencmd set_backlight {}".format(int(backlight_value)))
 
-    # Delay
-    time.sleep(delay_time)
+# Schedule function to run periodically
+schedule.every(schedule_time).seconds.do(set_backlight)
+
+# Main loop
+while True:
+    schedule.run_pending()
+    time.sleep(sleep_time)
