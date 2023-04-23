@@ -39,7 +39,7 @@ while True:
     elif light_value > max_light_value:
         backlight_value = max_backlight_value
     else:
-        backlight_value = (light_value - min_light_value) * (max_backlight_value - min_b$
+        backlight_value = (light_value - min_light_value) * (max_backlight_value - min_backlight_value) / (max_light_value - min_light_value) + min_backlight_value
 
     # Set backlight value
     os.system("vcgencmd set_backlight {}".format(int(backlight_value)))
