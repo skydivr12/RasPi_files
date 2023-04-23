@@ -29,7 +29,7 @@ min_backlight_value = 15
 max_backlight_value = 100
 delay_time = 3
 
-#while True:
+while True:
     # Read light sensor value
     light_value = adc.read(channel=0)
     print(light_value)
@@ -44,5 +44,5 @@ delay_time = 3
     # Set backlight value
     os.system("vcgencmd set_backlight {}".format(int(backlight_value)))
 
-#    # Delay
-#    time.sleep(delay_time)
+    # Delay
+    time.sleep(delay_time)
