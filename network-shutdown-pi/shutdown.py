@@ -16,6 +16,6 @@ for device in devices:
     # connect to the remote server
     ssh.connect(device["ip"], username=device["username"], password=device["password"])
     # issue the shutdown command
-    ssh.exec_command("sudo shutdown now")
+    ssh.exec_command("sudo shutdown -h now")
     # close the SSH connection
     ssh.close()
